@@ -1,14 +1,30 @@
+#!/usr/bin/env python
+
+import logging
+# Remove all handlers associated with the root logger object.
+#for handler in logging.root.handlers[:]:
+#    logging.root.removeHandler(handler)
+import logging.handlers 
+print(logging.handlers)
+
+logging.basicConfig(
+	level=logging.INFO,
+        format="%(message)s",
+	handlers=[
+        	logging.handlers.TimedRotatingFileHandler("app.log", when='midnight',  backupCount=7),
+        	logging.StreamHandler() 
+	])
+
 import time
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 
-mqttBroker = "heating02"	    		
+mqttBroker = "192.168.1.130"            # ip of broker	    		
 mqttPort =  1883
 
 
 # MQTT Topics
-log_topic = "vnfStatus"			# receive messages on this topic
-
+log_topic = "/house/service/log"	    # MQTT topic that apps send log messages to
 
 
 # mqtt section
@@ -22,21 +38,19 @@ def on_connect(client, userdata, flags, rc):
 
 # when receiving a mqtt message do this;
 def on_message(client, userdata, msg):
-    	message = str(msg.payload)
-    	print(msg.topic+" "+message)
-
+    message = msg.payload.decode('utf-8')
+    #print(msg.topic + " " + message)
+    logging.info(message)
 
 # to send a message
 def publish_mqtt(topic, pubData):
-    mqttc = mqtt.Client("MQTT Publish server")
+    mqttc = mqtt.Client("Openhab MQTT Log server")
     mqttc.connect(mqttBroker, mqttPort)
     mqttc.publish(topic, pubData)
     #mqttc.loop(2) //timeout = 2s
 
 def on_publish(mosq, obj, mid):
     print("mid: " + str(mid))
-
-
 
 
 client = mqtt.Client()
