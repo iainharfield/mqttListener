@@ -1,3 +1,3 @@
 # mqttListener
 
-Very simple Python MQTT Broker listener to print/echo what is published to a queue. 
+Very simple Python MQTT Broker listener to print and log what is published to a queue. 
