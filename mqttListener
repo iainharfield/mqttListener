@@ -7,6 +7,7 @@ import logging
 import logging.handlers 
 print(logging.handlers)
 
+# Configure logging
 logging.basicConfig(
 	level=logging.INFO,
         format="%(message)s",
